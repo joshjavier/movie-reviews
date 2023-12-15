@@ -10,6 +10,12 @@ const port = process.env.PORT || 8000;
 
 async function main() {
   try {
+    // Send a ping to confirm a successful connection
+    await client.db('admin').command({ ping: 1 });
+    console.log(
+      'Pinged your deployment. You successfully connected to MongoDB!',
+    );
+
     await MoviesDAO.injectDB(client);
     await ReviewsDAO.injectDB(client);
 
