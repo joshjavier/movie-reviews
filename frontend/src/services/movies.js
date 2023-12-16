@@ -1,36 +1,46 @@
 import axios from 'axios';
 
+const baseUrl = 'http://localhost:5000/api/v1/movies';
+
 class MovieDataService {
   getAll(page = 0) {
-    return axios.get(`http://localhost:5000/api/v1/movies?page=${page}`);
+    return axios.get(`${baseUrl}?page=${page}`);
   }
 
   get(id) {
-    return axios.get(`http://localhost:5000/api/v1/movies/id/${id}`);
+    return axios.get(`${baseUrl}/id/${id}`);
   }
 
   find(query, by = 'title', page = 0) {
-    return axios.get(
-      `http://localhost:5000/api/v1/movies?${by}=${query}&page=${page}`,
-    );
+    let url = new URL(baseUrl);
+    if (Array.isArray(by) && by.length === query.length) {
+      for (let i = 0; i < by.length; i++) {
+        url.searchParams.set(by[i], query[i]);
+      }
+    } else {
+      url.searchParams.set(by, query);
+    }
+    url.searchParams.set('page', page);
+
+    return axios.get(url);
   }
 
   createReview(data) {
-    return axios.post('http://localhost:5000/api/v1/movies/review', data);
+    return axios.post(baseUrl + '/review', data);
   }
 
   updateReview(data) {
-    return axios.put('http://localhost:5000/api/v1/movies/review', data);
+    return axios.put(baseUrl + '/review', data);
   }
 
   deleteReview(id, userEmail) {
-    return axios.delete('http://localhost:5000/api/v1/movies/review', {
+    return axios.delete(baseUrl + '/review', {
       data: { review_id: id, email: userEmail },
     });
   }
 
   getRatings() {
-    return axios.get('http://localhost:5000/api/v1/movies/ratings');
+    return axios.get(baseUrl + '/ratings');
   }
 }
 
