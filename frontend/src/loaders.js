@@ -44,3 +44,12 @@ export async function moviesLoader({ request }) {
     console.log(e);
   }
 }
+
+export async function movieLoader({ params }) {
+  try {
+    let movie = await moviesService.get(params.id).then((res) => res.data);
+    return { movie };
+  } catch (e) {
+    console.log(e);
+  }
+}
